@@ -39,7 +39,7 @@ export const MyUserContextProvider = (props: Props) => {
       .select('*, prices(*, products(*))')
       .in('status', ['trialing', 'active'])
       .single();
-
+  console.log(user);
   // To fetch data from supabase
   useEffect(() => {
     //
