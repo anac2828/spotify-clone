@@ -10,6 +10,7 @@ type UserContextType = {
   userDetails: UserDetails | null;
   isLoading: boolean;
   subscription: Subscription | null;
+  id: string;
 };
 
 export const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -39,7 +40,7 @@ export const MyUserContextProvider = (props: Props) => {
       .select('*, prices(*, products(*))')
       .in('status', ['trialing', 'active'])
       .single();
-  console.log(user);
+
   // To fetch data from supabase
   useEffect(() => {
     //
