@@ -17,7 +17,7 @@ function Library() {
     if (!user) {
       return authModal.onOpen();
     }
-
+    // TODO: check for subscription
     return uploadModal.onOpen();
   };
 

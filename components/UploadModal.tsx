@@ -1,5 +1,3 @@
-'use client';
-
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { FieldValues, useForm, SubmitHandler } from 'react-hook-form';
 import { useState } from 'react';

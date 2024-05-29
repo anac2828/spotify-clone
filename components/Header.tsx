@@ -1,4 +1,4 @@
-'user client';
+'use client';
 import { useRouter } from 'next/navigation';
 import { RxCaretLeft, RxCaretRight } from 'react-icons/rx';
 import { twMerge } from 'tailwind-merge';

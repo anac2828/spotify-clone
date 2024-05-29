@@ -1,14 +1,14 @@
-'use client';
-import getSongs from '@/actions/getSongs';
 import Header from '@/components/Header';
 import ListItem from '@/components/ListItem';
+import getSongs from '@/actions/getSongs';
 
 // Page will not cache and data will always be uptodate
-// export const revalidate = false;
+export const revalidate = false;
 
 // eslint-disable-next-line @next/next/no-async-client-component
 export default async function Home() {
   const songs = await getSongs();
+
   return (
     <div className='w-full h-full overflow-hidden overflow-y-auto rounded-lg bg-neutral-900'>
       <Header>
