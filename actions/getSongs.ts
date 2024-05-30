@@ -1,5 +1,5 @@
 import { Song } from '@/types';
-import { createSupabaseServerClient } from '@/utils/supabaseCreateServerClient';
+import createSupabaseServerClient from '@/utils/supabaseCreateServerClient';
 
 // const getSongs = async () => {
 //   const { data, error } = await supabase

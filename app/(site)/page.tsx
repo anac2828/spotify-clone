@@ -1,3 +1,4 @@
+// Server component
 import Header from '@/components/Header';
 import ListItem from '@/components/ListItem';
 import getSongs from '@/actions/getSongs';
@@ -9,7 +10,7 @@ export const revalidate = false;
 // eslint-disable-next-line @next/next/no-async-client-component
 export default async function Home() {
   const songs = await getSongs();
-
+  console.log(songs);
   return (
     <div className='w-full h-full overflow-hidden overflow-y-auto rounded-lg bg-neutral-900'>
       <Header>
