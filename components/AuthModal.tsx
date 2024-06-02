@@ -11,9 +11,12 @@ import { useEffect } from 'react';
 
 const AuthModal = () => {
   const supabaseClient = useSupabaseClient();
+
   const router = useRouter();
   const { session } = useSessionContext();
   const { onClose, isOpen } = useAuthModal();
+
+  console.log('supabase', supabaseClient, 'SESSION', session);
 
   useEffect(() => {
     if (session) {
