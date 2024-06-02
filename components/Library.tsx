@@ -3,10 +3,11 @@
 import { AiOutlinePlus } from 'react-icons/ai';
 import { TbPlaylist } from 'react-icons/tb';
 
+import { Song } from '@/types';
 import useAuthModal from '@/hooks/useAuthModal';
 import { useUser } from '@/hooks/useUser';
 import useUploadModal from '@/hooks/useUploadModal';
-import { Song } from '@/types';
+import MediaItem from './MediaItem';
 
 interface LibraryProps {
   songs: Song[];
@@ -41,7 +42,7 @@ const Library: React.FC<LibraryProps> = ({ songs }) => {
       </div>
       <div className='flex flex-col gap-y-2 mt-4 px-3'>
         {songs.map((song) => (
-          <div key={song.id}>{song.title}</div>
+          <MediaItem onClick={() => {}} key={song.id} data={song} />
         ))}
       </div>
     </div>
