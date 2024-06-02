@@ -5,7 +5,7 @@ import getSongs from '@/actions/getSongs';
 import PageContent from '../components/PageContent';
 
 // Page will not cache and data will always be uptodate
-export const revalidate = false;
+export const revalidate = 0;
 
 // eslint-disable-next-line @next/next/no-async-client-component
 export default async function Home() {

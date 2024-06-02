@@ -1,3 +1,4 @@
+'use client';
 import { useSupabaseClient } from '@supabase/auth-helpers-react';
 import { FieldValues, useForm, SubmitHandler } from 'react-hook-form';
 import { useState } from 'react';
@@ -12,7 +13,7 @@ import Button from './Button';
 
 const UploadModal = () => {
   const uploadModal = useUploadModal();
-  const user = useUser();
+  const { user } = useUser();
   const supabaseClient = useSupabaseClient();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -29,6 +30,7 @@ const UploadModal = () => {
     }
   };
 
+  // SUBMIT FORM
   const onSubmit: SubmitHandler<FieldValues> = async (values) => {
     try {
       setIsLoading(true);
@@ -63,7 +65,7 @@ const UploadModal = () => {
       // the path to the image on supabase will be the string in the upload option
       const { data: imageData, error: imageError } = await supabaseClient.storage
         .from('images')
-        .upload(`song-${values.title}-${uniqueID}`, imageFile, {
+        .upload(`image-${values.title}-${uniqueID}`, imageFile, {
           cacheControl: '3600',
           upsert: false,
         });
@@ -74,6 +76,7 @@ const UploadModal = () => {
       }
       // ***
 
+      // CREATE A RECORD ON THE SONGS TABLE
       const { error: supabaseError } = await supabaseClient.from('songs').insert({
         user_id: user.id,
         title: values.title,

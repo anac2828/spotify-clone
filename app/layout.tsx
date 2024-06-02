@@ -16,9 +16,9 @@ export const metadata: Metadata = {
   description: 'Listen to music',
 };
 
-// export const revalidate = false;
+export const revalidate = 0;
 
-async function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const userSongs = await getSongsByUserId();
 
   return (
@@ -35,5 +35,3 @@ async function RootLayout({ children }: { children: React.ReactNode }) {
     </html>
   );
 }
-
-export default RootLayout;

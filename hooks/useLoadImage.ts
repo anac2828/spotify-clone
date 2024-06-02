@@ -1,10 +1,9 @@
 import { Song } from '@/types';
-
-// import { useSupabaseClient } from '@supabase/auth-helpers-react';
-import { createClient } from '@/utils/supabaseCreateClient';
+import { useSupabaseClient } from '@supabase/auth-helpers-react';
 
 const useLoadImage = (song: Song) => {
-  const supabaseClient = createClient();
+  const supabaseClient = useSupabaseClient();
+
   if (!song) return null;
 
   const { data: imageData } = supabaseClient.storage
