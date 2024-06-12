@@ -14,7 +14,7 @@ interface ListItemProps {
 const ListItem: React.FC<ListItemProps> = ({ image, name, href }) => {
   const router = useRouter();
   const onClick = () => {
-    // Add authentication before push
+    //TODO: Add authentication before push
     router.push(href);
   };
   return (
