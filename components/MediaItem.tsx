@@ -13,7 +13,8 @@ const MediaItem: React.FC<MediaItemProps> = ({ data, onClick }) => {
   const imageUrl = useLoadImage(data);
 
   const handleClick = () => {
-    if (onClick) return;
+    if (!onClick) return;
+    onClick(data.id);
   };
 
   return (
