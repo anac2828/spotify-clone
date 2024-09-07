@@ -1,13 +1,13 @@
-import Stripe from "stripe";
-import { createClient } from "@supabase/supabase-js";
-import { Database } from "@/types_db";
-import { Price, Product } from "@/types";
-import { stripe } from "./stripe";
-import { toDateTime } from "./helpers";
+import Stripe from 'stripe';
+import { createClient } from '@supabase/supabase-js';
+import { Database } from '@/types_db';
+import { Price, Product } from '@/types';
+import { stripe } from './stripe';
+import { toDateTime } from './helpers';
 
 export const supabaseAdmin = createClient<Database>(
-  process.env.NEXT_PUBLIC_SUPABASE_URL || "",
-  process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+  process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 );
 
 // Save new record to supabase
@@ -21,17 +21,18 @@ const upsertProductRecord = async (product: Stripe.Product) => {
     metadata: product.metadata,
   };
 
-  const { error } = await supabaseAdmin.from("products").upsert([productData]);
+  const { error } = await supabaseAdmin.from('products').upsert([productData]);
 
   if (error) throw error;
 
   console.log(`Product inserted/updated: ${product.id}`);
 };
 
+// Save new price to supabase
 const upsertPriceRecord = async (price: Stripe.Price) => {
   const priceData: Price = {
     id: price.id,
-    product_id: typeof price.product === "string" ? price.product : "",
+    product_id: typeof price.product === 'string' ? price.product : '',
     active: price.active,
     currency: price.currency,
     description: price.nickname ?? undefined,
@@ -43,13 +44,14 @@ const upsertPriceRecord = async (price: Stripe.Price) => {
     metadata: price.metadata,
   };
 
-  const { error } = await supabaseAdmin.from("prices").upsert([priceData]);
+  const { error } = await supabaseAdmin.from('prices').upsert([priceData]);
 
   if (error) throw error;
 
   console.log(`Price inserted/updated: ${price.id}`);
 };
 
+// Save or Get customer
 const createOrRetrieveCustomer = async ({
   email,
   uuid,
@@ -58,9 +60,9 @@ const createOrRetrieveCustomer = async ({
   uuid: string;
 }) => {
   const { data, error } = await supabaseAdmin
-    .from("customers")
-    .select("stripe_customer_id")
-    .eq("id", uuid)
+    .from('customers')
+    .select('stripe_customer_id')
+    .eq('id', uuid)
     .single();
 
   if (error || !data?.stripe_customer_id) {
@@ -73,7 +75,7 @@ const createOrRetrieveCustomer = async ({
 
     const customer = await stripe.customers.create(customerData);
     const { error: supabaseError } = await supabaseAdmin
-      .from("customers")
+      .from('customers')
       .insert([{ id: uuid, stripe_customer_id: customer.id }]);
 
     if (supabaseError) throw supabaseError;
@@ -98,12 +100,12 @@ const copyBillingDetailsToCustomer = async (
   await stripe.customers.update(customer, { name, phone, address });
 
   const { error } = await supabaseAdmin
-    .from("users")
+    .from('users')
     .update({
       billing_address: { ...address },
       payment_method: { ...payment_method[payment_method.type] },
     })
-    .eq("id", uuid);
+    .eq('id', uuid);
 
   if (error) throw error;
 };
@@ -114,9 +116,9 @@ const manageSubscriptionStatusChange = async (
   createAction = false
 ) => {
   const { data: customerData, error: noCustomerError } = await supabaseAdmin
-    .from("customers")
-    .select("id")
-    .eq("stripe_customer_id", customerId)
+    .from('customers')
+    .select('id')
+    .eq('stripe_customer_id', customerId)
     .single();
 
   if (noCustomerError) throw noCustomerError;
@@ -124,10 +126,10 @@ const manageSubscriptionStatusChange = async (
   const { id: uuid } = customerData!;
 
   const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
-    expand: ["default_payment_method"],
+    expand: ['default_payment_method'],
   });
 
-  const subscriptionData: Database["public"]["Tables"]["subscriptions"]["Insert"] =
+  const subscriptionData: Database['public']['Tables']['subscriptions']['Insert'] =
     {
       id: subscription.id,
       user_id: uuid,
@@ -166,7 +168,7 @@ const manageSubscriptionStatusChange = async (
     };
 
   const { error } = await supabaseAdmin
-    .from("subscriptions")
+    .from('subscriptions')
     .upsert([subscriptionData]);
 
   if (error) throw error;
