@@ -1,9 +1,13 @@
 'use client';
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
+import { postData } from '@/libs/helpers';
+import { getStripe } from '@/libs/stripeClient';
 import { Price, ProductWithPrice } from '@/types';
 import { useUser } from '@/hooks/useUser';
 import Modal from './Modal';
 import Button from './Button';
+import useSubscribeModal from '@/hooks/useSubscribeModal';
 
 interface SubscribeModalProps {
   products: ProductWithPrice[];
@@ -19,10 +23,41 @@ const formatPrice = (price: Price) => {
 };
 
 const SubscribeModal: React.FC<SubscribeModalProps> = ({ products }) => {
+  // Get user and subscription from supabase
   const { user, isLoading, subscription } = useUser();
   const [priceIdLoading, setPriceIdLoading] = useState<string>();
+  const { onClose, isOpen } = useSubscribeModal();
 
-  const handleCheckout = async (price: Price) => {};
+  const onChange = (open: boolean) => {
+    if (!open) onClose();
+  };
+
+  const handleCheckout = async (price: Price) => {
+    setPriceIdLoading(price.id);
+
+    if (!user) {
+      setPriceIdLoading(undefined);
+      return toast.error('Must be logged in.');
+    }
+    if (subscription) {
+      setPriceIdLoading(undefined);
+      return toast.error('Already subscribed.');
+    }
+    try {
+      const { sessionId } = await postData({
+        url: `/api/create-checkout-session`,
+        data: { price },
+      });
+      console.log('session id', sessionId);
+      const stripe = await getStripe();
+      console.log('STRIPE', stripe);
+      stripe?.redirectToCheckout({ sessionId });
+    } catch (error) {
+      toast.error((error as Error)?.message);
+    } finally {
+      setPriceIdLoading(undefined);
+    }
+  };
 
   let content = <div className='text-center'>No products available.</div>;
 
@@ -48,12 +83,16 @@ const SubscribeModal: React.FC<SubscribeModalProps> = ({ products }) => {
       </div>
     );
   }
+
+  if (subscription) {
+    content = <div className='text-center'>Already subscribed.</div>;
+  }
   return (
     <Modal
       title='Only for premium users'
       description='Listen to music with Spotify premimum'
-      isOpen
-      onChange={() => {}}
+      isOpen={isOpen}
+      onChange={onChange}
     >
       {content}
     </Modal>
