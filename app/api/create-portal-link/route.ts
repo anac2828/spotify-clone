@@ -22,11 +22,12 @@ export async function POST() {
     if (!customer) throw new Error('Could not get customer');
     const { url } = await stripe.billingPortal.sessions.create({
       customer,
-      return_url: `${getURL}/account`,
+      return_url: `${getURL()}/account`,
     });
+
     return NextResponse.json({ url });
   } catch (error) {
-    console.log(error);
+    console.log('ERROR ************', error);
     return new NextResponse('Internal Error', { status: 500 });
   }
 }
