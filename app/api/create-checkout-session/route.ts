@@ -1,6 +1,6 @@
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { headers, cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
 import { stripe } from '@/libs/stripe';
 import { getURL } from '@/libs/helpers';
 import { createOrRetrieveCustomer } from '@/libs/supabaseAdmin';
@@ -25,7 +25,7 @@ export async function POST(request: Request) {
       line_items: [{ price: price.id, quantity }],
       mode: 'subscription',
       allow_promotion_codes: true,
-      subscription_data: { trial_from_plan: true, metadata },
+      subscription_data: { metadata },
       success_url: `${getURL()}/account`,
       cancel_url: `${getURL()}`,
     });
