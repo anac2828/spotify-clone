@@ -1,6 +1,9 @@
 'use client';
 import { User } from '@supabase/auth-helpers-nextjs';
-import { useSessionContext, useUser as useSupaUser } from '@supabase/auth-helpers-react';
+import {
+  useSessionContext,
+  useUser as useSupaUser,
+} from '@supabase/auth-helpers-react';
 import { createContext, useContext, useEffect, useState } from 'react';
 
 import { Subscription, UserDetails } from '@/types';
@@ -13,7 +16,9 @@ type UserContextType = {
   subscription: Subscription | null;
 };
 
-export const UserContext = createContext<UserContextType | undefined>(undefined);
+export const UserContext = createContext<UserContextType | undefined>(
+  undefined
+);
 
 export interface Props {
   [propName: string]: any;
@@ -47,20 +52,22 @@ export const MyUserContextProvider = (props: Props) => {
     if (user && !isLoadingData && !userDetails && !subscription) {
       setIsLoadingData(true);
 
-      Promise.allSettled([getUserDetails(), getSubscription()]).then((results) => {
-        const userDetailsPromise = results[0];
-        const subscriptionPromise = results[1];
+      Promise.allSettled([getUserDetails(), getSubscription()]).then(
+        (results) => {
+          const userDetailsPromise = results[0];
+          const subscriptionPromise = results[1];
 
-        //loads data user data to userDetails state
-        if (userDetailsPromise.status === 'fulfilled')
-          setUserDetails(userDetailsPromise.value.data as UserDetails);
+          //loads data user data to userDetails state
+          if (userDetailsPromise.status === 'fulfilled')
+            setUserDetails(userDetailsPromise.value.data as UserDetails);
 
-        //
-        if (subscriptionPromise.status === 'fulfilled')
-          setSubscription(subscriptionPromise.value.data as Subscription);
+          //
+          if (subscriptionPromise.status === 'fulfilled')
+            setSubscription(subscriptionPromise.value.data as Subscription);
 
-        setIsLoadingData(false);
-      });
+          setIsLoadingData(false);
+        }
+      );
     } else if (!user && !isLoadingUser && !isLoadingData) {
       setUserDetails(null);
       setSubscription(null);
